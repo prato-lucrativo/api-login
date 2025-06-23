@@ -1,0 +1,41 @@
+<ion-content class="ion-padding">
+  <div class="login-wrapper">
+    <div class="login-container">
+      <h1>Bem-vindo(a) de volta!</h1>
+      <p class="subtitle">Faça login para continuar no Prato Lucrativo</p>
+
+       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <ion-input
+        formControlName="email"
+        placeholder="Email"
+        type="email"
+        fill="solid"
+        required
+      ></ion-input>
+      <div *ngIf="email?.invalid && email?.touched" class="error-message">
+        <small *ngIf="email?.errors?.['required']">Email é obrigatório.</small>
+        <small *ngIf="email?.errors?.['email']">Email inválido.</small>
+      </div>
+
+      <ion-input
+        formControlName="senha"
+        placeholder="Senha"
+        type="password"
+        fill="solid"
+        required
+      ></ion-input>
+
+      <div class="forgot-password">
+        <a  (click)="esqueciSenha()">Esqueci minha senha</a>
+      </div>
+
+      <ion-button expand="block" type="submit" [disabled]="isLoading"
+      >Entrar</ion-button>
+    </form>
+
+    <div class="signup-link">
+      Não tem conta? <a routerLink="/signup">Crie uma aqui</a>
+    </div>
+    </div>
+  </div>
+</ion-content>

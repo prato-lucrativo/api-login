@@ -1,0 +1,42 @@
+<ion-content class="ion-padding">
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+    <div class="signup-wrapper">
+      <div class="signup-container">
+        <h1>Crie sua conta</h1>
+        <p class="subtitle">Preencha os dados abaixo para se cadastrar</p>
+
+        <ion-input
+          formControlName="nome"
+          placeholder="Nome completo"
+          type="text">
+        </ion-input>
+
+        <ion-input
+          formControlName="email"
+          placeholder="Email"
+          type="email">
+        </ion-input>
+
+        <ion-input
+          formControlName="senha"
+          placeholder="Senha"
+          type="password">
+        </ion-input>
+
+        <ion-input
+          formControlName="confirmarSenha"
+          placeholder="Confirmar Senha"
+          type="password">
+        </ion-input>
+
+        <ion-button expand="block" type="submit" [disabled]="isLoading">
+          {{ isLoading ? 'Cadastrando...' : 'Cadastrar' }}
+        </ion-button>
+
+        <div class="login-link">
+          Já tem conta? <a routerLink="/login">Entrar</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</ion-content>
