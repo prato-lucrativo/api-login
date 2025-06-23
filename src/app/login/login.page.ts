@@ -60,7 +60,7 @@ esqueciSenha() {
 
     const { email, senha } = this.loginForm.value;
 
-    this.http.post<any>('http://localhost:3000/api/login', { email, senha }).subscribe({
+    this.http.post<any>(`${environment.API_URL}/login`, { email, senha }).subscribe({
       next: async (res) => {
         this.isLoading = false;
         if (res.success) {
