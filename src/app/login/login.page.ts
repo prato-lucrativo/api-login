@@ -1,39 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [IonicModule, CommonModule, ReactiveFormsModule, RouterModule, HttpClientModule],
+  imports: [IonicModule, CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss']
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   loginForm: FormGroup;
   isLoading = false;
 
   constructor(
     private fb: FormBuilder,
     private toastController: ToastController,
-    private http: HttpClient,
-    private router: Router
-    
+    private router: Router,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       senha: ['', Validators.required]
     });
   }
-ngOnInit() {
-  const isAuthenticated = localStorage.getItem('auth') === 'true';
-  if (isAuthenticated) {
-    this.router.navigate(['/home']);
+
+  ngOnInit() {
+    const isAuthenticated = localStorage.getItem('auth') === 'true';
+    if (isAuthenticated) {
+      this.router.navigate(['/home']);
+    }
   }
-}
 
   async presentToast(message: string, color: string = 'danger') {
     const toast = await this.toastController.create({
@@ -45,10 +45,9 @@ ngOnInit() {
     await toast.present();
   }
 
-  // dentro da classe LoginPage:
-esqueciSenha() {
-  this.router.navigate(['/forgot-password']);
-}
+  esqueciSenha() {
+    this.router.navigate(['/forgot-password']);
+  }
 
   async onSubmit() {
     if (this.loginForm.invalid) {
@@ -57,33 +56,30 @@ esqueciSenha() {
     }
 
     this.isLoading = true;
-
     const { email, senha } = this.loginForm.value;
 
-    this.http.post<any>(`${environment.API_URL}/login`, { email, senha }).subscribe({
-      next: async (res) => {
+    this.authService.login(email, senha).subscribe({
+      next: async (res: any) => {
         this.isLoading = false;
+
         if (res.success) {
-          localStorage.setItem('auth', 'true'); // salva estado autenticado
+          localStorage.setItem('auth', 'true');
           await this.presentToast('Login efetuado com sucesso!', 'success');
-          // Exemplo: redirecionar para a página principal
           this.router.navigate(['/home']);
         } else {
           await this.presentToast(res.message || 'E-mail ou senha incorretos.');
         }
       },
       error: async (err) => {
-  this.isLoading = false;
-  console.error('Erro:', err);
+        this.isLoading = false;
+        console.error('Erro:', err);
 
-  if (err.status === 400) {
-    await this.presentToast(err.error.message || 'E-mail ou senha incorretos.');
-  } else {
-    await this.presentToast('Erro ao conectar com o servidor.');
-  }
-}
-
-
+        if (err.status === 400) {
+          await this.presentToast(err.error.message || 'E-mail ou senha incorretos.');
+        } else {
+          await this.presentToast('Erro ao conectar com o servidor.');
+        }
+      }
     });
   }
 
