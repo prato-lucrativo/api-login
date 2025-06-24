@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { provideRouter } from '@angular/router';
 import { LoginGuard } from './login.guard';
 import { AuthGuard } from './auth.guard'; // ajuste o caminho se necessário
+
 const routes: Routes = [
   {
     path: '',
@@ -12,7 +12,7 @@ const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./login/login.page').then(m => m.LoginPage),
-     canActivate: [LoginGuard]
+    canActivate: [LoginGuard]
   },
   {
     path: 'signup',
@@ -21,11 +21,11 @@ const routes: Routes = [
   {
     path: 'home',
     loadComponent: () => import('./home/home.page').then(m => m.HomePage),
-     canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'forgot-password',
-    loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+    loadChildren: () => import('./forgot-password/forgot-password.module').then(m => m.ForgotPasswordPageModule)
   }
 ];
 
