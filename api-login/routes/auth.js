@@ -19,7 +19,17 @@ try {
     return res.status(400).json({ success: false, message: 'Email ou senha incorretos' });
   }
 
-  res.json({ success: true, message: 'Login bem-sucedido!' });
+  res.json({
+  success: true,
+  message: 'Login bem-sucedido!',
+  usuario: {
+    id: user._id,
+    nome: user.nome,
+    email: user.email,
+  },
+  token: 'fake-token', // (ou gere um real se quiser segurança)
+});
+
 } catch (err) {
   console.error('Erro na rota /login:', err);
   res.status(500).json({ error: 'Erro no servidor' });
